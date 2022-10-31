@@ -1,6 +1,6 @@
 import pyxel
 #from random import randint as rn
-#import math as m
+import math as m
 
 MY_PI = 180
 
