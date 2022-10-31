@@ -2,6 +2,8 @@ import pyxel
 #from random import randint as rn
 import math as m
 
+pii = m.pi
+
 MY_PI = 180
 
 class Player():
