@@ -2,7 +2,7 @@ import pyxel
 #from random import randint as rn
 #import math as m
 
-MY_PI = 3.141592
+MY_PI = 180
 
 class Player():
     def __init__(self):
@@ -28,12 +28,12 @@ class Player():
     def draw(self):
 
         #pyxel.rect(self.x, self.y, 4, 4, 2)
-        self.angle += 0.05
+        self.angle += 2
         a, b = self.x + 8*pyxel.cos(self.angle), self.y + 8*pyxel.sin(self.angle)
         c, d = self.x + 8*pyxel.cos(self.angle+MY_PI/3*2), self.y + 8*pyxel.sin(self.angle+MY_PI/3*2)
         e, f = self.x + 8*pyxel.cos(self.angle+MY_PI/3*4), self.y + 8*pyxel.sin(self.angle+MY_PI/3*4)
 
-        pyxel.tri(a, b, c, d, e, f, 6)
+        pyxel.tri(a, b, c, d, e, f, 1)
 
 class App:
     def __init__(self):
