@@ -119,6 +119,7 @@ class App:
         self.res = pyxel.load("first.pyxres",tilemap=False,sound=True,music=False)
         self.enemy_timer = 0
         self.timer_speed_inv_og = 400
+        self.score = 0
         pyxel.run(self.update, self.draw)
 
         
@@ -126,84 +127,92 @@ class App:
 
 
         
-
-        player.move()
         if player.hp <= 0:
-            print("Score:" + str(player.kills*100))
-            pyxel.quit()
+           self.score = str(player.kills*100)
+        else:
 
-        self.timer_speed_inv = self.timer_speed_inv_og - player.kills * 8
-        if self.timer_speed_inv < 200:
-            self.timer_speed_inv = 120
+            player.move()
+            
+
+            self.timer_speed_inv = self.timer_speed_inv_og - player.kills * 8
+            if self.timer_speed_inv < 200:
+                self.timer_speed_inv = 120
 
 
-        self.enemy_timer += 2
-        if self.enemy_timer > self.timer_speed_inv:
-            self.enemy_timer = 0
-            enemy = Enemy(rn(0,160),rn(0,120))
-            enemies.append(enemy)
+            self.enemy_timer += 2
+            if self.enemy_timer > self.timer_speed_inv:
+                self.enemy_timer = 0
+                enemy = Enemy(rn(0,160),rn(0,120))
+                enemies.append(enemy)
 
-        for e in enemies:
-            if not e.warning:
-                e.move()
-                e.attack()
+            for e in enemies:
+                if not e.warning:
+                    e.move()
+                    e.attack()
 
-        for p in particles:
-            p[0] += p[2]
-            p[1] += p[3]
-            if p[2]>0.05:
-                p[2] /= 1.01
-            if p[3]>0.05:
-                p[3] /= 1.01
+            for p in particles:
+                p[0] += p[2]
+                p[1] += p[3]
+                if p[2]>0.05:
+                    p[2] /= 1.01
+                if p[3]>0.05:
+                    p[3] /= 1.01
 
-            p[4] -= 0.05
-            if p[1] > 120 or p[4] < 1:
-                particles.remove(p)
-        
+                p[4] -= 0.05
+                if p[1] > 120 or p[4] < 1:
+                    particles.remove(p)
+            
         
         
     def draw(self):
         global shake   
 
-        if shake:
-            shake -= 1
-            pyxel.camera(rn(-2,2), rn(-1,1))
+        if player.hp <= 0:
+            pyxel.cls(0)
+
+            pyxel.text(80,60,"Score: " + str(self.score),7)
         else:
-            pyxel.camera(0,0)
-        pyxel.cls(0)
+            if shake:
+                shake -= 1
+                pyxel.camera(rn(-2,2), rn(-1,1))
+            else:
+                pyxel.camera(0,0)
+            pyxel.cls(0)
 
-        player.draw()
+            player.draw()
 
-        '''for x in range(160):
-            for y in range(120):
-                if abs(pyxel.mouse_x-x) < 4 and abs(pyxel.mouse_y-y) < 4:
-                    pyxel.pset(x,y,2)'''
-
-
-        for e in enemies:
-            e.draw()
-
-        for p in particles:
-            pyxel.circ(p[0],p[1],p[4],p[5])
-            #pyxel.circb(p[0],p[1],p[4],4)
-        
+            '''for x in range(160):
+                for y in range(120):
+                    if abs(pyxel.mouse_x-x) < 4 and abs(pyxel.mouse_y-y) < 4:
+                        pyxel.pset(x,y,2)'''
 
 
-        pyxel.circb(150,10,8,3)
-        ag = -m.pi/2+m.pi*2/self.timer_speed_inv*self.enemy_timer
-        pyxel.line(150,10,150+m.cos(ag)*8,10+m.sin(ag)*8,3)
-        pyxel.line(12,6,12+player.hp/5,6,8)
-        pyxel.line(12,7,12+player.hp/5,7,8)
-        pyxel.line(12,8,12+player.hp/5,8,8)
+            for e in enemies:
+                e.draw()
 
-        for i in range(player.kills):
-            pyxel.pset(12+((i*2)%24),10+2*int((i*2)/24),7)
+            for p in particles:
+                pyxel.circ(p[0],p[1],p[4],p[5])
+                #pyxel.circb(p[0],p[1],p[4],4)
+            
 
-        if self.timer_speed_inv <= 200 and pyxel.frame_count%12 <= 6:
-            pyxel.text(60,8,"MADNESS",8)
 
-        pyxel.blt(pyxel.mouse_x-4, pyxel.mouse_y-4, 0, 16, 0, 8, 8, colkey=0)
+            pyxel.circb(150,10,8,3)
+            ag = -m.pi/2+m.pi*2/self.timer_speed_inv*self.enemy_timer
+            pyxel.line(150,10,150+m.cos(ag)*8,10+m.sin(ag)*8,3)
+            pyxel.line(12,6,12+player.hp/5,6,8)
+            pyxel.line(12,7,12+player.hp/5,7,8)
+            pyxel.line(12,8,12+player.hp/5,8,8)
+
+            for i in range(player.kills):
+                pyxel.pset(12+((i*2)%24),10+2*int((i*2)/24),7)
+
+            if self.timer_speed_inv <= 200 and pyxel.frame_count%12 <= 6:
+                pyxel.text(60,8,"MADNESS",8)
+
+            pyxel.blt(pyxel.mouse_x-4, pyxel.mouse_y-4, 0, 16, 0, 8, 8, colkey=0)
 
 
 App()
+
+
 
